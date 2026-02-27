@@ -1,0 +1,20 @@
+{
+  "name": "ひみつの暗号",
+  "short_name": "暗号",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#2d1a2e",
+  "theme_color": "#e8a4b8",
+  "icons": [
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f510.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/512x512/1f510.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
