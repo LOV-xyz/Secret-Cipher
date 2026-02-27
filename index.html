@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ ひみつの暗号 ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #e8a4b8;
+    --blush: #f5d0de;
+    --deep: #7c3a5a;
+    --ink: #2d1a2e;
+    --cream: #fdf6f0;
+    --gold: #d4a574;
+    --glow: rgba(232, 164, 184, 0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink);
+    min-height: 100vh;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(124, 58, 90, 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(232, 164, 184, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(45, 26, 46, 0.8) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--rose);
+    border-radius: 50%;
+    animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 0.7; transform: scale(1); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 580px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .title-deco {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--rose);
+    letter-spacing: 0.2em;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: var(--blush);
+    margin: 0.3rem 0;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 40px var(--glow);
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+    color: var(--rose);
+    opacity: 0.6;
+    letter-spacing: 0.15em;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(232, 164, 184, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.2rem;
+    backdrop-filter: blur(10px);
+    animation: fadeUp 0.6s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose), transparent);
+    opacity: 0.5;
+  }
+
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.2s; }
+  .card:nth-child(4) { animation-delay: 0.3s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--rose);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.6rem;
+    opacity: 0.9;
+  }
+
+  label .emoji { margin-right: 0.3em; }
+
+  input, textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(232, 164, 184, 0.25);
+    border-radius: 12px;
+    color: var(--cream);
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+    resize: none;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: rgba(245, 208, 222, 0.3);
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--rose);
+    background: rgba(232, 164, 184, 0.08);
+    box-shadow: 0 0 20px rgba(232, 164, 184, 0.1);
+  }
+
+  textarea { height: 100px; line-height: 1.6; }
+
+  .btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  button {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-encrypt {
+    background: linear-gradient(135deg, var(--deep), #b0496e);
+    color: var(--blush);
+    box-shadow: 0 4px 20px rgba(176, 73, 110, 0.3);
+  }
+
+  .btn-decrypt {
+    background: rgba(255,255,255,0.06);
+    color: var(--rose);
+    border: 1px solid rgba(232, 164, 184, 0.3);
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(232, 164, 184, 0.25);
+  }
+
+  button:active { transform: translateY(0); }
+
+  .btn-encrypt:hover { box-shadow: 0 6px 30px rgba(176, 73, 110, 0.4); }
+
+  .result-card {
+    background: rgba(232, 164, 184, 0.05);
+    border: 1px dashed rgba(232, 164, 184, 0.3);
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.2rem;
+    display: none;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .result-card.show { display: block; }
+
+  .result-label {
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+    opacity: 0.8;
+  }
+
+  .result-text {
+    color: var(--cream);
+    word-break: break-all;
+    line-height: 1.8;
+    font-size: 0.95rem;
+  }
+
+  .copy-btn {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 1rem;
+    background: rgba(212, 165, 116, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(212, 165, 116, 0.3);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: auto;
+    display: inline-block;
+  }
+
+  .copy-btn:hover {
+    background: rgba(212, 165, 116, 0.25);
+    transform: none;
+    box-shadow: none;
+  }
+
+  .error {
+    color: #f08080;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  .error.show { display: block; }
+
+  .hint {
+    font-size: 0.7rem;
+    color: rgba(232, 164, 184, 0.4);
+    margin-top: 0.4rem;
+    letter-spacing: 0.05em;
+  }
+
+  .howto-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(232, 164, 184, 0.15);
+    border-radius: 20px;
+    padding: 1.6rem 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.2rem;
+    animation: fadeUp 0.6s 0.45s ease both;
+  }
+
+  .howto-title {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--rose);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.2rem;
+    opacity: 0.85;
+  }
+
+  .howto-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .howto-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    color: var(--cream);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 1.8rem;
+    height: 1.8rem;
+    background: rgba(232, 164, 184, 0.15);
+    border: 1px solid rgba(232, 164, 184, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--rose);
+    margin-top: 0.1rem;
+  }
+
+  .step-hint {
+    font-size: 0.75rem;
+    color: rgba(232, 164, 184, 0.5);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.65rem;
+    color: rgba(232, 164, 184, 0.25);
+    letter-spacing: 0.15em;
+    animation: fadeUp 0.6s 0.5s ease both;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+  <header>
+    <div class="title-deco">✦ secret cipher ✦</div>
+    <h1>ひみつの暗号</h1>
+    <div class="subtitle">キーワードであなただけの暗号をつくろう</div>
+  </header>
+
+  <div class="card">
+    <label><span class="emoji">🗝️</span>キーワード（秘密の合言葉）</label>
+    <input type="text" id="keyword" placeholder="例：愛、love、sakura…" maxlength="100">
+    <div class="hint">このキーワードがないと復号できません</div>
+  </div>
+
+  <div class="card">
+    <label><span class="emoji">📝</span>テキスト</label>
+    <textarea id="inputText" placeholder="ここにテキストを入力してね…"></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-encrypt" onclick="doEncrypt()">🔒 暗号化する</button>
+    <button class="btn-decrypt" onclick="doDecrypt()">🔓 復号する</button>
+  </div>
+
+  <div class="result-card" id="resultCard">
+    <div class="result-label" id="resultLabel">✦ RESULT ✦</div>
+    <div class="result-text" id="resultText"></div>
+    <button class="copy-btn" onclick="copyResult()">📋 コピー</button>
+  </div>
+
+  <div class="error" id="errorMsg"></div>
+
+  <div class="howto-card">
+    <div class="howto-title">✶ 使い方 ✶</div>
+    <div class="howto-steps">
+      <div class="howto-step">
+        <span class="step-num">1</span>
+        <span>好きな<b>キーワード</b>を決めて入力してね<br><span class="step-hint">「愛」「love」「sakura」など何でもOK！</span></span>
+      </div>
+      <div class="howto-step">
+        <span class="step-num">2</span>
+        <span>隠したい<b>テキスト</b>を入力して<br><span class="step-hint">「🔒 暗号化する」を押すと暗号文が出てくるよ</span></span>
+      </div>
+      <div class="howto-step">
+        <span class="step-num">3</span>
+        <span>復号したいときは<b>テキスト欄</b>に暗号文を貼り付けて<br><span class="step-hint">同じキーワードを入れて「🔓 復号する」を押してね</span></span>
+      </div>
+      <div class="howto-step">
+        <span class="step-num">💡</span>
+        <span>キーワードを忘れずに！<br><span class="step-hint">忘れると復号できなくなっちゃうよ🗝️</span></span>
+      </div>
+    </div>
+  </div>
+
+  <footer>✦ キーワードを忘れずに ✦</footer>
+</div>
+
+<script>
+// ✦ 星を生成
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 40; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${Math.random()*5}s;`;
+  starsEl.appendChild(s);
+}
+
+// ✦ AES-256-GCM 暗号化
+// キーワード → PBKDF2 → AES-256 鍵を生成
+async function deriveKey(keyword, salt) {
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey(
+    'raw', enc.encode(keyword), 'PBKDF2', false, ['deriveKey']
+  );
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' },
+    baseKey,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+
+function toBase64url(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '~');
+}
+
+function fromBase64url(str) {
+  const b64 = str.replace(/-/g, '+').replace(/_/g, '/').replace(/~/g, '=');
+  return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+}
+
+async function encrypt(text, keyword) {
+  if (!keyword) throw new Error('キーワードを入力してください');
+  if (!text)    throw new Error('テキストを入力してください');
+
+  const enc  = new TextEncoder();
+  const salt = crypto.getRandomValues(new Uint8Array(16)); // ランダムsalt
+  const iv   = crypto.getRandomValues(new Uint8Array(12)); // ランダムIV
+  const key  = await deriveKey(keyword, salt);
+
+  const cipher = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    enc.encode(text)
+  );
+
+  // 形式: hm2.<salt_b64>.<iv_b64>.<cipher_b64>
+  return `hm2.${toBase64url(salt)}.${toBase64url(iv)}.${toBase64url(cipher)}`;
+}
+
+async function decrypt(data, keyword) {
+  if (!keyword) throw new Error('キーワードを入力してください');
+  if (!data)    throw new Error('テキストを入力してください');
+
+  // 古い形式（hm1.）への対応メッセージ
+  if (data.startsWith('hm1.')) throw new Error('このデータは古い形式です。暗号化し直してね');
+  if (!data.startsWith('hm2.')) throw new Error('このテキストは暗号ではないかも…？');
+
+  const parts = data.split('.');
+  if (parts.length !== 4) throw new Error('データが壊れているようです');
+
+  const salt   = fromBase64url(parts[1]);
+  const iv     = fromBase64url(parts[2]);
+  const cipher = fromBase64url(parts[3]);
+  const key    = await deriveKey(keyword, salt);
+
+  let plain;
+  try {
+    plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, cipher);
+  } catch {
+    throw new Error('キーワードが違うかもしれません🗝️');
+  }
+
+  return new TextDecoder().decode(plain);
+}
+
+// ✦ UI
+function showResult(label, text) {
+  document.getElementById('resultLabel').textContent = label;
+  document.getElementById('resultText').textContent  = text;
+  document.getElementById('resultCard').classList.add('show');
+  document.getElementById('errorMsg').classList.remove('show');
+}
+
+function showError(msg) {
+  document.getElementById('errorMsg').textContent = '⚠️ ' + msg;
+  document.getElementById('errorMsg').classList.add('show');
+  document.getElementById('resultCard').classList.remove('show');
+}
+
+async function doEncrypt() {
+  try {
+    const kw   = document.getElementById('keyword').value.trim();
+    const text = document.getElementById('inputText').value;
+    const result = await encrypt(text, kw);
+    showResult('✦ 暗号化されたテキスト ✦', result);
+  } catch(e) { showError(e.message); }
+}
+
+async function doDecrypt() {
+  try {
+    const kw   = document.getElementById('keyword').value.trim();
+    const text = document.getElementById('inputText').value.trim();
+    const result = await decrypt(text, kw);
+    showResult('✦ 復号されたテキスト ✦', result);
+  } catch(e) { showError(e.message); }
+}
+
+function copyResult() {
+  const text = document.getElementById('resultText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✓ コピーしました！';
+    setTimeout(() => btn.textContent = '📋 コピー', 1500);
+  });
+}
+</script>
+</body>
+</html>
